@@ -22,13 +22,16 @@ spec:
       namespace: argocd
     spec:
       project: default
-      source:
-        repoURL: https://github.com/Rauledev/platform-helm-charts.git
-        targetRevision: develop
-        path: 'charts/microservicios/{{chart}}'
-        helm:
-          valueFiles:
-            - '../../../{{valuesFile}}'
+      sources:
+        - repoURL: https://github.com/Rauledev/platform-helm-charts.git
+          targetRevision: develop
+          path: 'charts/microservicios/{{chart}}'
+          helm:
+            valueFiles:
+              - '$values/{{valuesFile}}'
+        - repoURL: https://github.com/Rauledev/platform-gitops.git
+          targetRevision: main
+          ref: values
       destination:
         server: https://kubernetes.default.svc
         namespace: nonprod
