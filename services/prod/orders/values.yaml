@@ -1,0 +1,18 @@
+# Values para orders en prod
+replicaCount: 3
+
+image:
+  repository: nginx
+  tag: "alpine"
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi

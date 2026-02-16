@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: microservices-prod
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: orders
+            chart: app-c
+            valuesFile: services/prod/orders/values.yaml
+          - name: payment
+            chart: app-c
+            valuesFile: services/prod/payment/values.yaml
+          - name: users
+            chart: app-c
+            valuesFile: services/prod/users/values.yaml
+  template:
+    metadata:
+      name: 'prod-{{name}}'
+      namespace: argocd
+    spec:
+      project: prod
+      source:
+        repoURL: https://github.com/Rauledev/platform-helm-charts.git
+        targetRevision: develop
+        path: 'charts/microservicios/{{chart}}'
+        helm:
+          valueFiles:
+            - '../../../{{valuesFile}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: prod
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

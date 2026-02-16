@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: microservices-nonprod
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: orders
+            chart: app-c
+            valuesFile: services/nonprod/orders/values.yaml
+          - name: payment
+            chart: app-c
+            valuesFile: services/nonprod/payment/values.yaml
+          - name: users
+            chart: app-c
+            valuesFile: services/nonprod/users/values.yaml
+  template:
+    metadata:
+      name: 'nonprod-{{name}}'
+      namespace: argocd
+    spec:
+      project: nonprod
+      source:
+        repoURL: https://github.com/Rauledev/platform-helm-charts.git
+        targetRevision: develop
+        path: 'charts/microservicios/{{chart}}'
+        helm:
+          valueFiles:
+            - '../../../{{valuesFile}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: nonprod
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
