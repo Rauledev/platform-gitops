@@ -21,7 +21,7 @@ spec:
       name: 'prod-{{name}}'
       namespace: argocd
     spec:
-      project: prod
+      project: default
       source:
         repoURL: https://github.com/Rauledev/platform-helm-charts.git
         targetRevision: develop

@@ -21,7 +21,7 @@ spec:
       name: 'nonprod-{{name}}'
       namespace: argocd
     spec:
-      project: nonprod
+      project: default
       source:
         repoURL: https://github.com/Rauledev/platform-helm-charts.git
         targetRevision: develop
